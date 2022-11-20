@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "edn-data": "^1.0.0"
+  }
+}
