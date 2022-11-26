@@ -9,37 +9,64 @@ function Url() {
   const [url, setUrl] = useState('');
   const [response, setResponse] = useState({ ready: false });
 
-  function parseEdn(res) {
-    var firstParse = parseEDNString(res.data);
-    return firstParse.map((entry) => {
-      if (Object.keys(entry).indexOf('map') !== -1) {
-        var obj = {};
-        for (var i = 0; i < entry.map.length; i++) {
-          var mapKeyVal = entry.map[i];
-          obj[mapKeyVal[0].key] = mapKeyVal[1];
-        }
-        return obj;
-      } else {
-        return entry;
-      }
-    });
+  function isEdnMap(v) {
+    return v && Object.keys(v).includes('map');
   }
+
+  function ednMapToJSON(entry) {
+    var obj = {};
+    for (var i = 0; i < entry.map.length; i++) {
+      var mapKeyVal = entry.map[i];
+      obj[mapKeyVal[0].key] = ednToJSON(mapKeyVal[1]);
+    }
+    return obj;
+  }
+
+  function ednToJSON(v) {
+    if (isEdnMap(v)) {
+      return ednMapToJSON(v);
+    } else if (Array.isArray(v)) {
+      return v.map(ednToJSON);
+    } else {
+      return v;
+    }
+  }
+
+  function parseEdn(res) {
+    return ednToJSON(parseEDNString(res.data));
+  }
+
   function handleResponse(res) {
     let data = parseEdn(res);
     console.log(data);
 
     let allNames = [];
-    for (var names = 0; names < data.length; names++) {
-      allNames.push(data[names].name);
+    let allMeans = [];
+    let allGitId = [];
+    let allTimestamp = [];
+    for (let i = 0; i < data.length; i++) {
+      let name = data[i].name;
+      console.log(data[i].mean);
+      if (allNames.indexOf(name) === -1) {
+        allNames.push(name);
+        allMeans.push(data[i].mean);
+        allGitId.push(data[i]['git-id']);
+        allTimestamp.push(data[i].timestamp);
+      }
     }
 
-    console.log(data[0].name);
-    setResponse({ ready: true, names: data[0].name, array: allNames });
+    setResponse({
+      ready: true,
+      allData: data,
+      names: allNames,
+      mean: allMeans,
+      gitId: allGitId,
+      timestamp: allTimestamp,
+    });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    //console.log(event);
     search();
   }
   function handleUrl(event) {
@@ -54,7 +81,7 @@ function Url() {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='Upload col-3'>
+          <div className='Upload col-sm-12 col-md-3'>
             <form onSubmit={handleSubmit}>
               <input
                 type={'text'}
@@ -64,26 +91,25 @@ function Url() {
               <button type='search'>Get</button>
             </form>
           </div>
-          <div className='col-9'>
+          <div className='col-sm-12 col-md-9'>
             <Graph />
           </div>
         </div>
         <div className='row'>
-          <div className='Upload col-3'>
+          <div className='Upload col-sm-12 col-md-3'>
             <FileDetails data={response} />
           </div>
           <div className='col-9'>
-            <DataDetails />
+            <DataDetails data={response} />
           </div>
         </div>
       </div>
     );
   } else {
-    search();
     return (
       <div className='container'>
         <div className='row'>
-          <div className='Upload col-3'>
+          <div className='Upload col-sm-12 col-md-3'>
             <form onSubmit={handleSubmit}>
               <input
                 type={'text'}
