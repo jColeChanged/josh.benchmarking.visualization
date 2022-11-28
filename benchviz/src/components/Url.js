@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { parseEDNString } from 'edn-data';
 import FileDetails from './FileDetails';
-import Graph from './Graph';
-import DataDetails from './DataDetails';
 
 function Url() {
   const [url, setUrl] = useState('');
@@ -39,15 +37,18 @@ function Url() {
   function handleResponse(res) {
     let data = parseEdn(res);
     console.log(data);
+    console.log(data[0].name);
 
     let allNames = [];
+    let allIds = [];
     let allMeans = [];
     let allGitId = [];
     let allTimestamp = [];
     for (let i = 0; i < data.length; i++) {
       let name = data[i].name;
-      console.log(data[i].mean);
+      // console.log(data[i].mean);
       if (allNames.indexOf(name) === -1) {
+        allIds.push(i);
         allNames.push(name);
         allMeans.push(data[i].mean);
         allGitId.push(data[i]['git-id']);
@@ -58,6 +59,7 @@ function Url() {
     setResponse({
       ready: true,
       allData: data,
+      ids: allIds,
       names: allNames,
       mean: allMeans,
       gitId: allGitId,
@@ -81,7 +83,7 @@ function Url() {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='Upload col-sm-12 col-md-3'>
+          <div className='Upload'>
             <form onSubmit={handleSubmit}>
               <input
                 type={'text'}
@@ -91,25 +93,16 @@ function Url() {
               <button type='search'>Get</button>
             </form>
           </div>
-          <div className='col-sm-12 col-md-9'>
-            <Graph />
-          </div>
         </div>
-        <div className='row'>
-          <div className='Upload col-sm-12 col-md-3'>
-            <FileDetails data={response} />
-          </div>
-          <div className='col-9'>
-            <DataDetails data={response} />
-          </div>
-        </div>
+
+        <FileDetails data={response} />
       </div>
     );
   } else {
     return (
       <div className='container'>
         <div className='row'>
-          <div className='Upload col-sm-12 col-md-3'>
+          <div className='Upload'>
             <form onSubmit={handleSubmit}>
               <input
                 type={'text'}

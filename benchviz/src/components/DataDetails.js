@@ -1,31 +1,40 @@
 import React from 'react';
 function DataDetails(props) {
-  console.log(props);
+  let index = props.name;
+  let nameData = props.data.data.allData[index];
+  console.log(props.data.data.allData[index]);
+
+  //console.log(name);
   //console.log(props.data.allData[0]);
 
   return (
     <div className='DataDetails'>
-      <div className='row'>
-        <div className='col-sm-12 col-md-3'>
-          Name
-          {props.data.names.map((ename, index) => (
-            <div className='row' key={index}>
-              {ename}
-            </div>
-          ))}
-        </div>
-        <div className='col-sm-12 col-md-2'>
-          Git Id
-          {props.data.gitId.map((ename, index) => (
-            <div className='row' key={index}>
-              {ename}
-            </div>
-          ))}
-        </div>
-        <div className='col-sm-12 col-md-2'>Mean</div>
-        <div className='col-sm-12 col-md-2'>Timestamp</div>
-        <div className='col-sm-12 col-md-2'>Runtime-details</div>
-      </div>
+      <table className='table table-hover'>
+        <thead>
+          <tr>
+            <th scope='col'></th>
+            <th scope='col'>{nameData.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope='row'>Git Id</th>
+            <td>{nameData['git-id']}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Mean</th>
+            <td>{nameData['mean']}</td>
+          </tr>
+          <tr>
+            <th scope='row'>Timestamp</th>
+            <td>{nameData['timestamp']}</td>
+          </tr>
+          <tr>
+            <th scope='row'>RunTime Details</th>
+            <td>{nameData['runtime-details'].name}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
