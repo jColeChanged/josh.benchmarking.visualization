@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { parseEDNString } from 'edn-data';
-import FileDetails from './FileDetails';
+import Names from './Names';
 
 function Url() {
   const [url, setUrl] = useState('');
@@ -36,34 +36,20 @@ function Url() {
 
   function handleResponse(res) {
     let data = parseEdn(res);
-    console.log(data);
-    console.log(data[0].name);
+    //console.log(data);
 
     let allNames = [];
-    let allIds = [];
-    let allMeans = [];
-    let allGitId = [];
-    let allTimestamp = [];
     for (let i = 0; i < data.length; i++) {
       let name = data[i].name;
-      // console.log(data[i].mean);
       if (allNames.indexOf(name) === -1) {
-        allIds.push(i);
         allNames.push(name);
-        allMeans.push(data[i].mean);
-        allGitId.push(data[i]['git-id']);
-        allTimestamp.push(data[i].timestamp);
       }
     }
 
     setResponse({
       ready: true,
       allData: data,
-      ids: allIds,
       names: allNames,
-      mean: allMeans,
-      gitId: allGitId,
-      timestamp: allTimestamp,
     });
   }
 
@@ -95,7 +81,7 @@ function Url() {
           </div>
         </div>
 
-        <FileDetails data={response} />
+        <Names data={response} />
       </div>
     );
   } else {

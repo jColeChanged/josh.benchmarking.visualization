@@ -1,14 +1,16 @@
 import React from 'react';
-function DataDetails(props) {
+import Graph from './Graph';
+
+function Data(props) {
   var benchmarks = props.data.data.allData.filter((b) => b.name === props.name);
   //let nameData = props.data.data.allData[index];
   //console.log(props.data.data.allData[index]);
-
   //console.log(name);
-  console.log(props.data.data.allData);
+  //console.log(props.data.data.allData);
 
   return (
-    <div className='DataDetails'>
+    <div className='Data'>
+      <Graph data={props} />
       <table className='table table-hover'>
         <thead>
           <tr>
@@ -19,8 +21,8 @@ function DataDetails(props) {
           </tr>
         </thead>
         <tbody>
-          {benchmarks.map((benchmark) => (
-            <tr>
+          {benchmarks.map((benchmark, index) => (
+            <tr key={index}>
               <td>{benchmark['git-id']}</td>
               <td>{benchmark['mean']}</td>
               <td>{benchmark['timestamp']}</td>
@@ -33,4 +35,4 @@ function DataDetails(props) {
   );
 }
 
-export default DataDetails;
+export default Data;

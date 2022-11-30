@@ -1,5 +1,5 @@
 import React from 'react';
-function Graph() {
+function Graph(props) {
   return <div className='Graph'>Graph will go here</div>;
 }
 
