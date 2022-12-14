@@ -36,7 +36,9 @@ function Url() {
 
   function handleResponse(res) {
     let data = parseEdn(res);
-    //console.log(data);
+    console.log(data);
+    let test = data[0].timestamp;
+    console.log(test);
 
     let allNames = [];
     for (let i = 0; i < data.length; i++) {
@@ -48,7 +50,7 @@ function Url() {
 
     setResponse({
       ready: true,
-      allData: data,
+      data: data,
       names: allNames,
     });
   }
